@@ -497,4 +497,105 @@
         left.className = 'left-meta';
 
         const likes = document.createElement('span');
-        likes.textContent =
+        likes.textContent = '❤ ' + (item.likes ?? 0);
+        const views = document.createElement('span');
+        views.textContent = '👁 ' + (item.views ?? 0);
+
+        left.appendChild(likes);
+        left.appendChild(views);
+
+        const date = document.createElement('span');
+        date.textContent = item.date ? new Date(item.date).toLocaleString() : '';
+
+        meta.appendChild(left);
+        meta.appendChild(date);
+
+        body.appendChild(meta);
+
+        const foot = document.createElement('div');
+        foot.className = 'footer';
+        foot.textContent = item.added_by || 'ADDED BY: ROHIT $EXT';
+
+        body.appendChild(foot);
+
+        card.appendChild(thumb);
+        card.appendChild(body);
+
+        els.grid.appendChild(card);
+      });
+    }
+
+    function clearAll() {
+      els.category.value = '';
+      els.rarity.value = '';
+      els.event.value = '';
+      rebuildEventOptions();
+      applyFilters();
+    }
+
+    // Load from JSON manifest. If missing, show a placeholder sample.
+    async function loadCharacters() {
+      try {
+        const res = await fetch('/content/characters/manifest.json', { cache: 'no-store' });
+        if (res.ok) {
+          const arr = await res.json();
+          allCharacters = (Array.isArray(arr) ? arr : []).map(x => ({
+            title: x.title || '',
+            category: x.category || '',
+            rarity: x.rarity || '',
+            event: x.event || '',
+            series: x.series || '',
+            character_id: x.character_id || '',
+            added_by: x.added_by || 'ADDED BY: ROHIT $EXT',
+            likes: Number(x.likes || 0),
+            views: Number(x.views || 0),
+            image: x.image || '',
+            date: x.date || ''
+          }));
+          return;
+        }
+      } catch (e) {
+        // ignore and use fallback
+      }
+
+      // Fallback sample so page isn't blank (ensure assets/uploads/sample.png exists)
+      allCharacters = [{
+        title: 'Sample Character',
+        category: 'Waifu',
+        rarity: 'Limited Edition',
+        event: '🎃𝑯𝒂𝒍𝒍𝒐𝒘𝒆𝒆𝒏🎃',
+        series: 'Demo',
+        character_id: '000',
+        added_by: 'ADDED BY: YOU',
+        likes: 0,
+        views: 0,
+        image: '/assets/uploads/sample.png',
+        date: new Date().toISOString()
+      }];
+    }
+
+    // Event wiring
+    els.category.addEventListener('change', () => {
+      rebuildEventOptions();
+      applyFilters();
+    });
+
+    els.rarity.addEventListener('change', () => {
+      rebuildEventOptions();
+      applyFilters();
+    });
+
+    els.event.addEventListener('change', applyFilters);
+    els.clear.addEventListener('click', clearAll);
+
+    // Init: load data, show all by default
+    (async function init() {
+      await loadCharacters();
+      rebuildEventOptions();
+      filtered = allCharacters.slice();
+      renderGrid(filtered);
+      els.state.classList.toggle('hidden', filtered.length > 0);
+    })();
+  </script>
+</body>
+</html>
