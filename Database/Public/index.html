@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ʏᴀʙᴜᴋɪ's ᴅᴀᴛᴀʙᴀsᴇ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index,follow" />
+  <style>
+    :root{
+      --bg:#0e0f12; --panel:#15171c; --muted:#9aa0a6; --text:#e8eaed; --brand:#7c4dff;
+      --accent:#00e5ff; --card:#13151a; --chip:#20232b; --border:#22252c;
+      --common:#4fa3ff; --medium:#ff5463; --rare:#ff8a3d; --legendary:#ffd54a;
+      --limited:#b388ff; --celestial:#4de6d7;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .title{font-weight:800;font-size:20px;letter-spacing:0.3px}
+    .subtitle{color:var(--muted);font-size:13px}
+    .toolbar{display:flex;gap:12px;flex-wrap:wrap;background:var(--panel);padding:12px;border-radius:14px;border:1px solid var(--border)}
+    select,button{background:#0f1116;color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:10px;font-size:14px}
+    select:disabled{opacity:.6}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+    .thumb{position:relative;aspect-ratio:4/5;background:#0b0c10;display:grid;place-items:center}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .badge{position:absolute;top:10px;left:10px;background:var(--chip);border:1px solid var(--border);padding:6px 9px;border-radius:10px;font-size:12px;display:flex;gap:6px;align-items:center}
+    .badge.common{border-color:var(--common);color:var(--common)}
+    .badge.medium{border-color:var(--medium);color:var(--medium)}
+    .badge.rare{border-color:var(--rare);color:var(--rare)}
+    .badge.legendary{border-color:var(--legendary);color:var(--legendary)}
+    .badge.limited{border-color:var(--limited);color:var(--limited)}
+    .badge.celestial{border-color:var(--celestial);color:var(--celestial)}
+    .event{position:absolute;top:10px;right:10px;background:var(--chip);border:1px solid var(--border);padding:6px 9px;border-radius:10px;font-size:12px}
+    .body{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .line1{font-size:12px;color:var(--muted)}
+    .line2{font-size:14px;display:flex;align-items:center;gap:8px}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
+    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+    .left-meta{display:flex;gap:10px;align-items:center}
+    .footer{margin-top:4px;color:var(--muted);font-size:12px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    .chip{background:var(--chip);border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:12px}
+    .hidden{display:none !important}
+    .hero{background:linear-gradient(135deg,#141726 0%,#0e111a 50%,#101217 100%);border:1px solid var(--border);padding:16px;border-radius:16px;margin-bottom:14px}
+    .brand{color:var(--brand);font-weight:700}
+    .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .note{color:var(--muted);font-size:12px}
+    .state{margin-top:16px;color:var(--muted);text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="title">ʏᴀʙᴜᴋɪ's ᴅᴀᴛᴀʙᴀsᴇ</div>
+        <div class="subtitle">OwO! Check out this waifu/husbando gallery.</div>
+      </div>
+      <a href="/admin/" title="Admin">Admin</a>
+    </header>
+
+    <section class="hero">
+      <div><span class="brand">Start:</span> Select a Category first, then Rarity and Event unlock.</div>
+      <div class="filters">
+        <select id="categorySelect">
+          <option value="">Choose Category</option>
+          <option>Waifu</option>
+          <option>Husbando</option>
+        </select>
+        <select id="raritySelect" disabled>
+          <option value="">Choose Rarity</option>
+          <option data-badge="🔵𝙍𝘼𝙍𝙄𝙏𝙔:  Common">Common</option>
+          <option data-badge="🔴𝙍𝘼𝙍𝙄𝙏𝙔:  Medium">Medium</option>
+          <option data-badge="🟠𝙍𝘼𝙍𝙄𝙏𝙔:  Rare">Rare</option>
+          <option data-badge="🟡𝙍𝘼𝙍𝙄𝙏𝙔:  Legendary">Legendary</option>
+          <option data-badge="🔮𝙍𝘼𝙍𝙄𝙏𝙔:  Limited Edition">Limited Edition</option>
+          <option data-badge="🎐𝙍𝘼𝙍𝙄𝙏𝙔:  Celestial">Celestial</option>
+        </select>
+        <select id="eventSelect" disabled>
+          <option value="">Choose Event (if applicable)</option>
+        </select>
+        <button id="clearBtn" disabled>Clear</button>
+      </div>
+      <div class="note">Public can view only; adding/editing is admin-only at /admin.</div>
+    </section>
+
+    <section id="chips" class="chips"></section>
+
+    <section id="grid" class="grid"></section>
+    <div id="state" class="state hidden">No characters found for current filters.</div>
+  </div>
+
+  <script>
+    // Constants for badges and events
+    const RARITY_BADGES = {
+      "Common": "🔵𝙍𝘼𝙍𝙄𝙏𝙔:  Common",
+      "Medium": "🔴𝙍𝘼𝙍𝙄𝙏𝙔:  Medium",
+      "Rare": "🟠𝙍𝘼𝙍𝙄𝙏𝙔:  Rare",
+      "Legendary": "🟡𝙍𝘼𝙍𝙄𝙏𝙔:  Legendary",
+      "Limited Edition": "🔮𝙍𝘼𝙍𝙄𝙏𝙔:  Limited Edition",
+      "Celestial": "🎐𝙍𝘼𝙍𝙄𝙏𝙔:  Celestial"
+    };
+
+    const EVENTS = {
+      limitedEdition: [
+        "🏀𝑩𝒂𝒔𝒌𝒆𝒕𝒃𝒂𝒍𝒍🏀","🐰𝑩𝒖𝒏𝒏𝒚🐰","🎄𝑪𝒉𝒓𝒊𝒔𝒕𝒎𝒂𝒔🎄","🎃𝑯𝒂𝒍𝒍𝒐𝒘𝒆𝒆𝒏🎃","👘𝑲𝒊𝒎𝒐𝒏𝒐👘","🧹𝑴𝒂𝒊𝒅🧹","🎸𝑴𝒖𝒔𝒊𝒄𝒊𝒂𝒏🎸","🚓𝑶𝒇𝒇𝒊𝒄𝒆𝒓🚓","🎒𝑺𝒄𝒉𝒐𝒐𝒍🎒","🏖𝑺𝒖𝒎𝒎𝒆𝒓🏖","☃️𝑾𝒊𝒏𝒕𝒆𝒓☃️"
+      ],
+      celestialWaifu: [
+        "🀄️𝑨𝒃𝒃𝒆𝒔𝒔🀄️","💍𝑩𝒓𝒊𝒅𝒆💍","🎊𝑪𝒉𝒆𝒆𝒓𝒍𝒆𝒂𝒅𝒆𝒓𝒔🎊","🩺 𝑵𝒖𝒓𝒔𝒆 🩺","🥻𝑺𝒂𝒓𝒆𝒆🥻","🎾𝑻𝒆𝒏𝒏𝒊𝒔🎾","💞𝑽𝒂𝒍𝒆𝒏𝒕𝒊𝒏𝒆💞"
+      ],
+      celestialHusbando: [
+        "🏁𝑹𝒂𝒄𝒆𝒓🏁","💞𝑽𝒂𝒍𝒆𝒏𝒕𝒊𝒏𝒆💞","🏴‍☠️𝑷𝒊𝒓𝒂𝒕𝒆🏴‍☠️","🩺𝑫𝒐𝒄𝒕𝒐𝒓🩺","🎩𝑻𝒖𝒙𝒆𝒅𝒐🎩"
+      ]
+    };
+
+    const els = {
+      grid: document.getElementById('grid'),
+      state: document.getElementById('state'),
+      category: document.getElementById('categorySelect'),
+      rarity: document.getElementById('raritySelect'),
+      event: document.getElementById('eventSelect'),
+      clear: document.getElementById('clearBtn'),
+      chips: document.getElementById('chips')
+    };
+
+    let allCharacters = []; // populated from content/characters
+
+    function slugToTitle(slug){
+      return slug.replace(/[-_]/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    }
+
+    function rarityClass(r){
+      switch(r){
+        case 'Common': return 'common';
+        case 'Medium': return 'medium';
+        case 'Rare': return 'rare';
+        case 'Legendary': return 'legendary';
+        case 'Limited Edition': return 'limited';
+        case 'Celestial': return 'celestial';
+        default: return '';
+      }
+    }
+
+    function renderEventOptions(){
+      const cat = els.category.value;
+      const rar = els.rarity.value;
+      els.event.innerHTML = '<option value="">Choose Event (if applicable)</option>';
+
+      let options = [];
+      if(rar === 'Limited Edition'){
+        options = EVENTS.limitedEdition;
+      }else if(rar === 'Celestial' && cat === 'Waifu'){
+        options = EVENTS.celestialWaifu;
+      }else if(rar === 'Celestial' && cat === 'Husbando'){
+        options = EVENTS.celestialHusbando;
+      }
+      if(options.length){
+        options.forEach(v=>{
+          const opt = document.createElement('option');
+          opt.value = v; opt.textContent = v;
+          els.event.appendChild(opt);
+        });
+        els.event.disabled = false;
+      }else{
+        els.event.disabled = true;
+      }
+    }
+
+    function renderChips(){
+      els.chips.innerHTML = '';
+      const items = [];
+      if(els.category.value) items.push({k:'Category', v: els.category.value});
+      if(els.rarity.value) items.push({k:'Rarity', v: els.rarity.value});
+      if(els.event.value) items.push({k:'Event', v: els.event.value});
+      items.forEach(({k,v})=>{
+        const d = document.createElement('div');
+        d.className = 'chip';
+        d.textContent = k+': '+v;
+        els.chips.appendChild(d);
+      });
+    }
+
+    function applyFilters(){
+      let list = [...allCharacters];
+      const cat = els.category.value;
+      const rar = els.rarity.value;
+      const evt = els.event.value;
+
+      if(cat) list = list.filter(x=>x.category===cat);
+      if(rar) list = list.filter(x=>x.rarity===rar);
+      if(evt) list = list.filter(x=>x.event===evt);
+
+      renderChips();
+      els.state.classList.toggle('hidden', list.length>0);
+      renderGrid(list);
+      els.clear.disabled = !(cat || rar || evt);
+    }
+
+    function renderGrid(list){
+      els.grid.innerHTML = '';
+      list.forEach(item=>{
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = item.title || 'Character';
+        img.src = item.image || '';
+        thumb.appendChild(img);
+
+        const b = document.createElement('div');
+        b.className = 'badge '+rarityClass(item.rarity);
+        b.textContent = RARITY_BADGES[item.rarity] || '';
+        thumb.appendChild(b);
+
+        if(item.event){
+          const e = document.createElement('div');
+          e.className = 'event';
+          e.textContent = item.event;
+          thumb.appendChild(e);
+        }
+
+        const body = document.createElement('div');
+        body.className = 'body';
+
+        const l1 = document.createElement('div');
+        l1.className = 'line1';
+        l1.textContent = 'OwO! Check out this '+(item.category?.toLowerCase()||'character')+'!';
+        body.appendChild(l1);
+
+        const l2 = document.createElement('div');
+        l2.className = 'line2';
+        const dot = document.createElement('span'); dot.className = 'dot';
+        const series = document.createElement('span');
+        series.textContent = (item.series? item.series+' • ':'') + (item.character_id? '#'+item.character_id:'');
+        l2.appendChild(dot); l2.appendChild(series);
+        body.appendChild(l2);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const left = document.createElement('div'); left.className='left-meta';
+        const likes = document.createElement('span'); likes.textContent = '❤ '+(item.likes??0);
+        const views = document.createElement('span'); views.textContent = '👁 '+(item.views??0);
+        left.appendChild(likes); left.appendChild(views);
+        const date = document.createElement('span');
+        date.textContent = item.date ? new Date(item.date).toLocaleString() : '';
+        meta.appendChild(left); meta.appendChild(date);
+        body.appendChild(meta);
+
+        const foot = document.createElement('div');
+        foot.className = 'footer';
+        foot.textContent = item.added_by || 'ADDED BY: ROHIT $EXT';
+        body.appendChild(foot);
+
+        card.appendChild(thumb);
+        card.appendChild(body);
+        els.grid.appendChild(card);
+      });
+    }
+
+    function clearAll(){
+      els.category.value = '';
+      els.rarity.value = '';
+      els.event.innerHTML = '<option value="">Choose Event (if applicable)</option>';
+      els.event.disabled = true;
+      els.rarity.disabled = true;
+      els.clear.disabled = true;
+      renderChips();
+      applyFilters();
+    }
+
+    // Data loading: read Markdown files from content/characters
+    // This approach lists known files via an index.json if present; otherwise tries a basic pattern.
+    // Recommended: Later generate a manifest.json at build time for reliability.
+    async function loadCharacters(){
+      // Try fetching a manifest if you add one later
+      try{
+        const res = await fetch('/content/characters/manifest.json', {cache:'no-store'});
+        if(res.ok){
+          const arr = await res.json();
+          allCharacters = arr;
+          return;
+        }
+      }catch(e){}
+
+      // Fallback: if a few known files exist, add them manually for initial test
+      // You can replace this with a static list or a pre-generated manifest.
+      allCharacters = [];
+      // Example: If you add a sample file sample-waifu.md, parse it:
+      // await addMarkdown('/content/characters/sample-waifu.md');
+
+      // Render empty state if none; CMS will add files after first publish.
+    }
+
+    async function addMarkdown(path){
+      const res = await fetch(path, {cache:'no-store'});
+      if(!res.ok) return;
+      const text = await res.text();
+      const parsed = parseFrontMatter(text);
+      if(parsed) allCharacters.push(parsed);
+    }
+
+    // Very small front matter parser: expects ---\nkey: value\n--- then body
+    function parseFrontMatter(md){
+      const fm = md.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+      if(!fm) return null;
+      const attrs = {};
+      fm[1].split('\n').forEach(line=>{
+        const m = line.match(/^([A-Za-z0-9_]+):\s*(.*)$/);
+        if(m){
+          const key = m[1].trim();
+          let val = m[2].trim();
+          // strip quotes if any
+          if((val.startsWith('"') && val.endsWith('"'))||(val.startsWith("'")&&val.endsWith("'"))){
+            val = val.slice(1,-1);
+          }
+          attrs[key] = val;
+        }
+      });
+      const body = fm[2].trim();
+      return {
+        title: attrs.title || '',
+        category: attrs.category || '',
+        rarity: attrs.rarity || '',
+        event: attrs.event || '',
+        rarity_badge: attrs.rarity_badge || (RARITY_BADGES[attrs.rarity]||''),
+        series: attrs.series || '',
+        character_id: attrs.character_id || '',
+        added_by: attrs.added_by || 'ADDED BY: ROHIT $EXT',
+        likes: Number(attrs.likes||0),
+        views: Number(attrs.views||0),
+        image: attrs.image || '',
+        date: attrs.date || '',
+        body
+      };
+    }
+
+    // Event wiring
+    els.category.addEventListener('change', ()=>{
+      const hasCat = !!els.category.value;
+      els.rarity.disabled = !hasCat;
+      if(!hasCat){
+        els.rarity.value=''; els.event.value='';
+        els.event.disabled = true;
+      }
+      renderEventOptions();
+      applyFilters();
+    });
+
+    els.rarity.addEventListener('change', ()=>{
+      renderEventOptions();
+      applyFilters();
+    });
+
+    els.event.addEventListener('change', applyFilters);
+    els.clear.addEventListener('click', clearAll);
+
+    // Init
+    (async function init(){
+      await loadCharacters();
+      renderGrid(allCharacters);
+      els.state.classList.toggle('hidden', allCharacters.length>0);
+    })();
+  </script>
+</body>
+</html>
