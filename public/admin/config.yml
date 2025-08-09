@@ -1,0 +1,124 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+publish_mode: editorial_workflow
+site_url: "/"
+
+collections:
+  - name: "characters"
+    label: "Characters"
+    folder: "content/characters"
+    create: true
+    slug: "{{category}}-{{rarity}}-{{title}}"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        hint: "Character name"
+
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - "Waifu"
+          - "Husbando"
+
+      - label: "Rarity"
+        name: "rarity"
+        widget: "select"
+        options:
+          - "Common"
+          - "Medium"
+          - "Rare"
+          - "Legendary"
+          - "Limited Edition"
+          - "Celestial"
+
+      - label: "Event"
+        name: "event"
+        widget: "select"
+        required: false
+        options:
+          - "Limited Edition Events - 🏀Basketball🏀"
+          - "Limited Edition Events - 🐰Bunny🐰"
+          - "Limited Edition Events - 🎄Christmas🎄"
+          - "Limited Edition Events - 🎃Halloween🎃"
+          - "Limited Edition Events - 👘Kimono👘"
+          - "Limited Edition Events - 🧹Maid🧹"
+          - "Limited Edition Events - 🎸Musician🎸"
+          - "Limited Edition Events - 🚓Officer🚓"
+          - "Limited Edition Events - 🎒School🎒"
+          - "Limited Edition Events - 🏖Summer🏖"
+          - "Limited Edition Events - ☃️Winter☃️"
+          - "Celestial (Waifu) - 🀄️Abbess🀄️"
+          - "Celestial (Waifu) - 💍Bride💍"
+          - "Celestial (Waifu) - 🎊Cheerleaders🎊"
+          - "Celestial (Waifu) - 🩺Nurse🩺"
+          - "Celestial (Waifu) - 🥻Saree🥻"
+          - "Celestial (Waifu) - 🎾Tennis🎾"
+          - "Celestial (Waifu) - 💞Valentine💞"
+          - "Celestial (Husbando) - 🏁Racer🏁"
+          - "Celestial (Husbando) - 💞Valentine💞"
+          - "Celestial (Husbando) - 🏴☠️Pirate🏴☠️"
+          - "Celestial (Husbando) - 🩺Doctor🩺"
+          - "Celestial (Husbando) - 🎩Tuxedo🎩"
+
+      - label: "Rarity Badge (auto from rarity)"
+        name: "rarity_badge"
+        widget: "select"
+        default: "🔵𝙍𝘼𝙍𝙄𝙏𝙔: Common"
+        options:
+          - "🔵𝙍𝘼𝙍𝙄𝙏𝙔: Common"
+          - "🔴𝙍𝘼𝙍𝙄𝙏𝙔: Medium"
+          - "🟠𝙍𝘼𝙍𝙄𝙏𝙔: Rare"
+          - "🟡𝙍𝘼𝙍𝙄𝙏𝙔: Legendary"
+          - "🔮𝙍𝘼𝙍𝙄𝙏𝙔: Limited Edition"
+          - "🎐𝙍𝘼𝙍𝙄𝙏𝙔: Celestial"
+
+      - label: "Series"
+        name: "series"
+        widget: "string"
+        required: false
+
+      - label: "Character ID"
+        name: "character_id"
+        widget: "string"
+        required: false
+
+      - label: "Attribution"
+        name: "added_by"
+        widget: "string"
+        default: "ADDED BY: ROHIT $EXT"
+
+      - label: "Likes"
+        name: "likes"
+        widget: "number"
+        value_type: "int"
+        default: 0
+        min: 0
+
+      - label: "Views"
+        name: "views"
+        widget: "number"
+        value_type: "int"
+        default: 0
+        min: 0
+
+      - label: "Image"
+        name: "image"
+        widget: "image"
+        allow_multiple: false
+
+      - label: "Timestamp"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+
+      - label: "Description"
+        name: "body"
+        widget: "markdown"
+        required: false
